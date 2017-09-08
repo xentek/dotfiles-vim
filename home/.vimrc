@@ -72,10 +72,11 @@ set undodir=~/.vim/undo                 " where to save undo histories
 set undolevels=1000                     " How many undos
 set undoreload=10000                    " number of lines to save for undo
 set backspace=indent,eol,start          " backspace through everything in insert mode
-set shortmess=a                         " get rid of press enter or type command alert
-set cmdheight=2                         " get rid of press enter or type command alert
-let g:bufferline_echo=0                 " get rid of press enter or type command alert
-let g:switch_mapping = "-"		" set :Switch to -
+"set shortmess=a                        " get rid of press enter or type command alert
+"set cmdheight=2                        " get rid of press enter or type command alert
+"let g:bufferline_echo=0                " get rid of press enter or type command alert
+set noshowmode                          " let airline do the work
+let g:switch_mapping = "-"		        " set :Switch to -
 " UTF-8
 if has('multi_byte')
   scriptencoding utf-8
