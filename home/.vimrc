@@ -22,7 +22,9 @@ Plugin 'majutsushi/tagbar'		" ctags browser
 Plugin 'editorconfig/editorconfig-vim'  " editor config support
 Plugin 'tpope/vim-projectionist'	" project configuration for :A, :AV, :AS, etc
 Plugin 'sheerun/vim-polyglot'		" syntax and language support for all modern languages
+Plugin 'fatih/vim-go'                   " golang tooling
 Plugin 'ap/vim-css-color'		" css color highlighting
+Plugin 'prettier/vim-prettier'          " prettier format
 call vundle#end()			" end plugins
 
 " Configuration
