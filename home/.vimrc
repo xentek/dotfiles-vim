@@ -9,22 +9,27 @@ Plugin 'vim-scripts/L9'			" vim-script utility lib
 Plugin 'bogado/file-line'		" open vim at the specified line, e.g. `vim file.rb:20`
 Plugin 'scrooloose/nerdcommenter'	" block comments = ,c<space>
 Plugin 'scrooloose/syntastic'		" syntax checker
-Plugin 'vim-airline/vim-airline'	" status line
-Plugin 'tpope/vim-surround'		" change ounding characters
+Plugin 'tpope/vim-surround'		" change bounding characters
 Plugin 'vim-scripts/kwbdi.vim'		" delete buffers with :bd but don't close the window
 Plugin 'AndrewRadev/switch.vim'		" easily switch stuff (quotes, hash key style, booleans, etc) with -
 Plugin 'austintaylor/vim-indentobject'  " block indent helper
-Plugin 'othree/vim-autocomplpop'	" autocomplete
+Plugin 'prabirshrestha/async.vim'       " async support
+Plugin 'prabirshrestha/vim-lsp'         " language server protocol
+Plugin 'othree/vim-autocomplpop'        " autocomplete
+Plugin 'itchyny/vim-gitbranch'          " gitbranch in status line 
 Plugin 'airblade/vim-gitgutter'		" show git changes in left gutter
 Plugin 'xolox/vim-misc'                 " required by easytags
-Plugin 'xolox/vim-easytags'		" ctags support
-Plugin 'majutsushi/tagbar'		" ctags browser
+Plugin 'xolox/vim-easytags'             " ctags support
+Plugin 'majutsushi/tagbar'              " ctags browser
 Plugin 'editorconfig/editorconfig-vim'  " editor config support
-Plugin 'tpope/vim-projectionist'	" project configuration for :A, :AV, :AS, etc
+"Plugin 'tpope/vim-projectionist'	" project configuration for :A, :AV, :AS, etc
+Plugin 'fatih/vim-go',{'do':':GoUpdateBinaries'}  " golang tooling
 Plugin 'sheerun/vim-polyglot'		" syntax and language support for all modern languages
-Plugin 'fatih/vim-go'                   " golang tooling
+Plugin 'jparise/vim-graphql'            " syntax support for graphql
 Plugin 'ap/vim-css-color'		" css color highlighting
-Plugin 'prettier/vim-prettier'          " prettier format
+Plugin 'w0rp/ale'                       " async linting
+Plugin 'itchyny/lightline.vim'          " status line
+Plugin 'maximbaz/lightline-ale'         " ale-itegration for lightline
 call vundle#end()			" end plugins
 
 " Configuration
@@ -56,9 +61,9 @@ set tw=72                               " page width
 set modeline                            " turn on modeline support
 set modelines=5                         " check 5 lines for modelines in the file
 set ls=2				" turn on status line
-set statusline=%f\ %m\ %r               " status line tweaks
-set statusline+=Line:\ %l/%L            " show line numbers: current/total
-set statusline+=\ \|\ Col:\ %v          " show column number
+"set statusline=%f\ %m\ %r               " status line tweaks
+"set statusline+=Line:\ %l/%L            " show line numbers: current/total
+"set statusline+=\ \|\ Col:\ %v          " show column number
 set shell=/usr/local/bin/zsh            " Use zsh for shell commands
 set textwidth=0 wrapmargin=0            " No automatic line breaks
 set synmaxcol=1200                      " only syntax highlight the first 1200 chars of a line (speeds up vim)
@@ -66,19 +71,21 @@ set nojoinspaces                        " one space after .
 set nostartofline                       " don't reset cursor to start of line when moving around
 set autoread                            " reload buffers when file changes
 set ttyfast                             " Improve VIM's scrolling speed
-set ttyscroll=3                         " ttyscroll
+if !has('nvim')
+  set ttyscroll=3                       " ttyscroll
+endif
 set lazyredraw                          " lazyredraw
 set splitright                          " open vertical splits on the right
 set undofile                            " Save undo's after file closes
 set undodir=~/.vim/undo                 " where to save undo histories
 set undolevels=1000                     " How many undos
-set undoreload=10000                    " number of lines to save for undo
+set undoreload=1000                     " number of lines to save for undo
 set backspace=indent,eol,start          " backspace through everything in insert mode
 "set shortmess=a                        " get rid of press enter or type command alert
 "set cmdheight=2                        " get rid of press enter or type command alert
 "let g:bufferline_echo=0                " get rid of press enter or type command alert
-set noshowmode                          " let airline do the work
-let g:switch_mapping = "-"		        " set :Switch to -
+let g:switch_mapping = "-"		" set :Switch to -
+let g:polyglot_disabled = ['go']        " get go from standalone vim-go plugin.
 " UTF-8
 if has('multi_byte')
   scriptencoding utf-8
@@ -125,23 +132,65 @@ set wildignore+=*.swp,*~,._*                                                  " 
 set wildignore+=.DS_Store                                                     " Disable osx index files
 set wildignore+=*/Godeps/*                                                    " Disable godeps vendor files
 
+" lightline
+let g:lightline = { 
+      \ 'colorscheme': 'one',
+      \ 'active': {
+      \   'left': [
+      \     ['mode', 'paste'],
+      \     ['gitbranch', 'readonly', 'filename', 'modified']
+      \   ],
+      \   'right': [
+      \     ['linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok'], 
+      \     ['lineinfo'],
+      \     ['fileformat', 'fileencoding', 'filetype'],
+      \   ]
+      \ },
+      \ 'component_function':
+      \ { 'gitbranch': 'gitbranch#name' },
+      \ 'component_expand': {
+      \   'linter_checking': 'lightline#ale#checking',
+      \   'linter_warnings': 'lightline#ale#warnings',
+      \   'linter_errors': 'lightline#ale#errors',
+      \   'linter_ok': 'lightline#ale#ok'
+      \ },
+      \'component_type': {
+      \   'linter_checking': 'left',
+      \   'linter_warnings': 'warning',
+      \   'linter_errors': 'error',
+      \   'linter_ok': 'left',
+      \ },
+      \ }
+let g:lightline#ale#indicator_checking = "\uf110"
+let g:lightline#ale#indicator_warnings = "\uf071  "
+let g:lightline#ale#indicator_errors = "\uf05e  "
+let g:lightline#ale#indicator_ok = "\uf00c"
+
+" ale config
+let g:airline#extensions#ale#enabled = 1
+let g:ale_go_bingo_executable = 'gopls'
+
 " syntastic config
 let g:syntastic_ruby_exec = '~/.rbenv/shims/ruby'
 let g:syntastic_slim_checkers=['slimrb']
 
-" autocomplpopup config
-let g:acp_behaviorKeywordLength = 3
-let g:acp_behaviorKeywordIgnores = ["end"]
-
 " go-vim config
+let g:go_def_mode='godef'
 let g:go_fmt_command = "goimports"
 let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
 let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 let g:go_list_type = "quickfix"
+let g:go_code_completion_enabled = 1
+"autocmd FileType go setlocal omnifunc=go#complete#GocodeComplete
+autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
+autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
 
 " python config
-let g:syntastic_python_checkers = ['flake8']
-let g:syntastic_python_flake8_args = '--ignore=F403'
+"let g:syntastic_python_checkers = ['flake8']
+"let g:syntastic_python_flake8_args = '--ignore=F403'
 
 " php config
-let g:syntastic_php_exec = '/usr/local/bin/php'
+"let g:syntastic_php_exec = '/usr/local/bin/php'
