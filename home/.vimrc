@@ -8,7 +8,8 @@ Plugin 'VundleVim/Vundle.vim'		" plugin manager
 Plugin 'vim-scripts/L9'			" vim-script utility lib
 Plugin 'bogado/file-line'		" open vim at the specified line, e.g. `vim file.rb:20`
 Plugin 'scrooloose/nerdcommenter'	" block comments = ,c<space>
-Plugin 'scrooloose/syntastic'		" syntax checker
+"Plugin 'scrooloose/syntastic'		" syntax checker
+Plugin 'prettier/vim-prettier'          " code formatting
 Plugin 'tpope/vim-surround'		" change bounding characters
 Plugin 'vim-scripts/kwbdi.vim'		" delete buffers with :bd but don't close the window
 Plugin 'AndrewRadev/switch.vim'		" easily switch stuff (quotes, hash key style, booleans, etc) with -
@@ -84,6 +85,11 @@ set backspace=indent,eol,start          " backspace through everything in insert
 "set shortmess=a                        " get rid of press enter or type command alert
 "set cmdheight=2                        " get rid of press enter or type command alert
 "let g:bufferline_echo=0                " get rid of press enter or type command alert
+set foldmethod=syntax                   " fold method
+set foldnestmax=10                      " maximum nesting for index/syntax folds
+set nofoldenable                        " clear all folds when opening file
+set foldlevel=2                         " fold level
+
 let g:switch_mapping = "-"		" set :Switch to -
 let g:polyglot_disabled = ['go']        " get go from standalone vim-go plugin.
 " UTF-8
@@ -171,26 +177,42 @@ let g:airline#extensions#ale#enabled = 1
 let g:ale_go_bingo_executable = 'gopls'
 
 " syntastic config
-let g:syntastic_ruby_exec = '~/.rbenv/shims/ruby'
-let g:syntastic_slim_checkers=['slimrb']
+"let g:syntastic_ruby_exec = '~/.rbenv/shims/ruby'
+"let g:syntastic_slim_checkers=['slimrb']
+"let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+"let g:syntastic_python_checkers = ['flake8']
+"let g:syntastic_python_flake8_args = '--ignore=F403'
+"let g:syntastic_php_exec = '/usr/local/bin/php'
+
+" prettier config 
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+let g:prettier#config#print_width = 80
+let g:prettier#config#tab_width = 2
+let g:prettier#config#use_tabs = 'false'
+let g:prettier#config#semi = 'true'
+let g:prettier#config#single_quote = 'false'
+let g:prettier#config#bracket_spacing = 'true'
+let g:prettier#config#jsx_bracket_same_line = 'false'
+let g:prettier#config#arrow_parens = 'avoid'
+let g:prettier#config#trailing_comma = 'none'
+let g:prettier#config#parser = 'babylon'
+let g:prettier#config#config_precedence = 'prefer-file'
+let g:prettier#config#prose_wrap = 'preserve'
+let g:prettier#config#html_whitespace_sensitivity = 'css'
 
 " go-vim config
-let g:go_def_mode='godef'
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
 let g:go_fmt_command = "goimports"
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+let g:go_def_mapping_enabled = 0
 let g:go_list_type = "quickfix"
 let g:go_code_completion_enabled = 1
-"autocmd FileType go setlocal omnifunc=go#complete#GocodeComplete
+autocmd FileType go setlocal omnifunc=go#complete#GocodeComplete
 autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
 autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
 autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
-
-" python config
-"let g:syntastic_python_checkers = ['flake8']
-"let g:syntastic_python_flake8_args = '--ignore=F403'
-
-" php config
-"let g:syntastic_php_exec = '/usr/local/bin/php'
+autocmd BufRead,BufNewFile *.gohtml set filetype=gohtmltmpl
