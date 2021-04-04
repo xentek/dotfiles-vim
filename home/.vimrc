@@ -85,8 +85,8 @@ set backspace=indent,eol,start          " backspace through everything in insert
 "set shortmess=a                        " get rid of press enter or type command alert
 "set cmdheight=2                        " get rid of press enter or type command alert
 "let g:bufferline_echo=0                " get rid of press enter or type command alert
-set foldmethod=syntax                   " fold method
-set foldnestmax=10                      " maximum nesting for index/syntax folds
+"set foldmethod=syntax                   " fold method
+"set foldnestmax=10                      " maximum nesting for index/syntax folds
 set nofoldenable                        " clear all folds when opening file
 set foldlevel=2                         " fold level
 
