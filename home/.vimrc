@@ -90,6 +90,7 @@ set backspace=indent,eol,start          " backspace through everything in insert
 set nofoldenable                        " clear all folds when opening file
 set foldlevel=2                         " fold level
 
+let g:easytags_cmd = '/opt/homebrew/bin/ctags'
 let g:switch_mapping = "-"		" set :Switch to -
 let g:polyglot_disabled = ['go']        " get go from standalone vim-go plugin.
 " UTF-8
