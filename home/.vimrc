@@ -1,6 +1,7 @@
 set nocompatible 	  		" use VIM not vi
 
-" Plugins
+" plugins
+let g:polyglot_disabled = ['go']        " get go from standalone vim-go plugin.
 filetype off				" required for vundle
 set rtp+=~/.vim/bundle/Vundle.vim       " vundle runtime path
 call vundle#begin()			" all plugins must be between vundle begin/end
@@ -8,7 +9,9 @@ Plugin 'VundleVim/Vundle.vim'		" plugin manager
 Plugin 'vim-scripts/L9'			" vim-script utility lib
 Plugin 'bogado/file-line'		" open vim at the specified line, e.g. `vim file.rb:20`
 Plugin 'scrooloose/nerdcommenter'	" block comments = ,c<space>
+
 "Plugin 'scrooloose/syntastic'		" syntax checker
+
 Plugin 'prettier/vim-prettier'          " code formatting
 Plugin 'tpope/vim-surround'		" change bounding characters
 Plugin 'vim-scripts/kwbdi.vim'		" delete buffers with :bd but don't close the window
@@ -23,7 +26,7 @@ Plugin 'xolox/vim-misc'                 " required by easytags
 Plugin 'xolox/vim-easytags'             " ctags support
 Plugin 'majutsushi/tagbar'              " ctags browser
 Plugin 'editorconfig/editorconfig-vim'  " editor config support
-"Plugin 'tpope/vim-projectionist'	" project configuration for :A, :AV, :AS, etc
+Plugin 'tpope/vim-projectionist'	" project configuration for :A, :AV, :AS, etc
 Plugin 'fatih/vim-go',{'do':':GoUpdateBinaries'}  " golang tooling
 Plugin 'sheerun/vim-polyglot'		" syntax and language support for all modern languages
 Plugin 'jparise/vim-graphql'            " syntax support for graphql
@@ -65,7 +68,7 @@ set ls=2				" turn on status line
 "set statusline=%f\ %m\ %r               " status line tweaks
 "set statusline+=Line:\ %l/%L            " show line numbers: current/total
 "set statusline+=\ \|\ Col:\ %v          " show column number
-set shell=/usr/local/bin/zsh            " Use zsh for shell commands
+set shell=/opt/homebrew/bin/zsh           " Use zsh for shell commands
 set textwidth=0 wrapmargin=0            " No automatic line breaks
 set synmaxcol=1200                      " only syntax highlight the first 1200 chars of a line (speeds up vim)
 set nojoinspaces                        " one space after .
@@ -92,7 +95,6 @@ set foldlevel=2                         " fold level
 
 let g:easytags_cmd = '/opt/homebrew/bin/ctags'
 let g:switch_mapping = "-"		" set :Switch to -
-let g:polyglot_disabled = ['go']        " get go from standalone vim-go plugin.
 " UTF-8
 if has('multi_byte')
   scriptencoding utf-8
