@@ -9,9 +9,6 @@ Plugin 'VundleVim/Vundle.vim'		" plugin manager
 Plugin 'vim-scripts/L9'			" vim-script utility lib
 Plugin 'bogado/file-line'		" open vim at the specified line, e.g. `vim file.rb:20`
 Plugin 'scrooloose/nerdcommenter'	" block comments = ,c<space>
-
-"Plugin 'scrooloose/syntastic'		" syntax checker
-
 Plugin 'prettier/vim-prettier'          " code formatting
 Plugin 'tpope/vim-surround'		" change bounding characters
 Plugin 'vim-scripts/kwbdi.vim'		" delete buffers with :bd but don't close the window
@@ -35,6 +32,8 @@ Plugin 'w0rp/ale'                       " async linting
 Plugin 'itchyny/lightline.vim'          " status line
 Plugin 'maximbaz/lightline-ale'         " ale-itegration for lightline
 call vundle#end()			" end plugins
+
+set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf "fuzzy find
 
 " Configuration
 filetype plugin indent on 		" Enable filetype-specific indenting and plugins
@@ -68,7 +67,7 @@ set ls=2				" turn on status line
 "set statusline=%f\ %m\ %r               " status line tweaks
 "set statusline+=Line:\ %l/%L            " show line numbers: current/total
 "set statusline+=\ \|\ Col:\ %v          " show column number
-set shell=/opt/homebrew/bin/zsh           " Use zsh for shell commands
+set shell=$SHELL           " Use zsh for shell commands
 set textwidth=0 wrapmargin=0            " No automatic line breaks
 set synmaxcol=1200                      " only syntax highlight the first 1200 chars of a line (speeds up vim)
 set nojoinspaces                        " one space after .
@@ -93,8 +92,9 @@ set backspace=indent,eol,start          " backspace through everything in insert
 set nofoldenable                        " clear all folds when opening file
 set foldlevel=2                         " fold level
 
-let g:easytags_cmd = '/opt/homebrew/bin/ctags'
+let g:easytags_cmd = '/home/linuxbrew/.linuxbrew/bin/ctags'
 let g:switch_mapping = "-"		" set :Switch to -
+
 " UTF-8
 if has('multi_byte')
   scriptencoding utf-8

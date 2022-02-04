@@ -1,4 +1,5 @@
-set guifont=Monaco\ Nerd\ Font\ Complete:h13 " font settings
+set guifont=Monaco\ 13 " font settings
+"set guifont=Monaco\ Nerd\ Font\ Complete:h13 " font settings
 "set guifont=Hack\ Regular\ Nerd\ Font\ Complete:h14  " font settings
 set guioptions=-t       " hide toolbar
 
